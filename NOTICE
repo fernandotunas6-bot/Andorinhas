@@ -1,3 +1,27 @@
+Andorinha
+=========
+
+Andorinha is a modified version of Sellbird, changed on 2026-11-17 and
+afterwards. It is not the original Sellbird and is not endorsed by Sellbird's
+authors. The upstream project is at https://github.com/ethanplusai/sellbird
+
+As the GNU Affero General Public License requires, Andorinha is licensed under
+that same license, AGPL-3.0-only, and the original copyright and licence
+notices below are kept intact. Modified files carry a note saying they were
+changed.
+
+Anyone who interacts with a running copy of Andorinha over a network must be
+offered its complete corresponding source, including these modifications. That
+obligation travels with every copy handed to a client.
+
+The AGPL covers code, not trademarks. The swallow mark still carried in
+andorinha/web/andorinha-mark.svg and andorinha/desktop/tray.py, and the Sellbird
+wordmarks kept in docs/brand/, are Sellbird's brand, not Andorinha's. They are
+not licensed for use as this project's identity and must be replaced with your
+own before Andorinha is shown to anyone else.
+
+--------------------------------------------------------------------------------
+
 Sellbird (formerly Harvey)
 Copyright (C) 2026 Ethan Rogers and the Sellbird contributors
 
