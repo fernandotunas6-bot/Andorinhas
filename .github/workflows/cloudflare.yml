@@ -1,0 +1,57 @@
+name: Cloudflare
+
+on:
+  push:
+    branches: [main]
+    paths: ["site/**", ".github/workflows/cloudflare.yml"]
+  pull_request:
+    paths: ["site/**", ".github/workflows/cloudflare.yml"]
+  workflow_dispatch:
+
+concurrency:
+  group: cloudflare-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: site
+    env:
+      CF_SEND_TELEMETRY: "false"
+      # Secrets cannot be read inside an `if:` directly, so the presence of the
+      # token is resolved here and checked below. Without it the workflow still
+      # builds and checks the project, and skips only the upload.
+      HAS_CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN != '' && secrets.CLOUDFLARE_ACCOUNT_ID != '' }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+
+      - run: npm ci
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npx cf build
+
+      - name: Check the deploy without uploading
+        run: npx cf deploy --prebuilt --mode production --dry-run
+
+      - name: Deploy
+        if: github.event_name != 'pull_request' && env.HAS_CF_TOKEN == 'true'
+        run: npx cf deploy --prebuilt --mode production
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: No Cloudflare credentials, upload skipped
+        if: github.event_name != 'pull_request' && env.HAS_CF_TOKEN != 'true'
+        run: |
+          echo "::notice::Build and checks passed. Add the CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID repository secrets to deploy."
