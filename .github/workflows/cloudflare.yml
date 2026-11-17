@@ -23,7 +23,9 @@ jobs:
       # Secrets cannot be read inside an `if:` directly, so the presence of the
       # token is resolved here and checked below. Without it the workflow still
       # builds and checks the project, and skips only the upload.
-      HAS_CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN != '' && secrets.CLOUDFLARE_ACCOUNT_ID != '' }}
+      # The account id is optional: with a token scoped to one account, cf
+      # resolves the account itself. Only the token gates the upload.
+      HAS_CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
     steps:
       - uses: actions/checkout@v6
 
@@ -49,6 +51,8 @@ jobs:
         if: github.event_name != 'pull_request' && env.HAS_CF_TOKEN == 'true'
         run: |
           set -o pipefail
+          # An empty account id must not look like a chosen account.
+          if [ -z "${CLOUDFLARE_ACCOUNT_ID:-}" ]; then unset CLOUDFLARE_ACCOUNT_ID; fi
           npx cf deploy --prebuilt --mode production 2>&1 | tee deploy.log
           url="$(grep -oE 'https://[a-z0-9.-]+\.workers\.dev' deploy.log | head -1)"
           echo "url=$url" >> "$GITHUB_OUTPUT"
@@ -71,4 +75,4 @@ jobs:
       - name: No Cloudflare credentials, upload skipped
         if: github.event_name != 'pull_request' && env.HAS_CF_TOKEN != 'true'
         run: |
-          echo "::notice::Build and checks passed. Add the CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID repository secrets to deploy."
+          echo "::notice::Build and checks passed. Add the CLOUDFLARE_API_TOKEN repository secret to deploy."

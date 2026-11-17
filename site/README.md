@@ -27,8 +27,10 @@ usar um devcontainer com Linux (glibc 2.35+).
    precisa.
 2. Copiar o **Account ID** do painel da Cloudflare.
 3. No repositório, em **Settings → Secrets and variables → Actions**, criar:
-   - `CLOUDFLARE_API_TOKEN`
-   - `CLOUDFLARE_ACCOUNT_ID`
+   - `CLOUDFLARE_API_TOKEN` — obrigatório
+   - `CLOUDFLARE_ACCOUNT_ID` — opcional. Com um token limitado a uma só conta,
+     o `cf` resolve a conta sozinho. Define-o apenas se o deploy se queixar de
+     não saber que conta usar.
 4. Fazer push para `main`, ou correr o workflow à mão em **Actions → Cloudflare
    → Run workflow**.
 
