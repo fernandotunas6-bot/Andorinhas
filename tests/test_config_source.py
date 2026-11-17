@@ -1,4 +1,4 @@
-"""use_config: settings that come from somewhere other than sellbird.yaml."""
+"""use_config: settings that come from somewhere other than andorinha.yaml."""
 
 import asyncio
 from pathlib import Path
@@ -6,18 +6,18 @@ from pathlib import Path
 import pytest
 import yaml
 
-from sellbird import config as config_mod
-from sellbird.config import ConfigFileNotFoundError, current_config, load_config, use_config
-from sellbird.workspace_home import Home, use_home
+from andorinha import config as config_mod
+from andorinha.config import ConfigFileNotFoundError, current_config, load_config, use_config
+from andorinha.workspace_home import Home, use_home
 
-TEMPLATE = Path(__file__).resolve().parent.parent / "sellbird.yaml"
+TEMPLATE = Path(__file__).resolve().parent.parent / "andorinha.yaml"
 
 
 def _write(folder: Path, company: str) -> Path:
     data = yaml.safe_load(TEMPLATE.read_text(encoding="utf-8"))
     data["persona"]["company"] = company
     folder.mkdir(parents=True, exist_ok=True)
-    path = folder / "sellbird.yaml"
+    path = folder / "andorinha.yaml"
     path.write_text(yaml.safe_dump(data), encoding="utf-8")
     return path
 

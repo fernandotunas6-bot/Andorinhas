@@ -6,10 +6,10 @@ from types import SimpleNamespace
 
 import pytest
 
-import sellbird.agents.scout as scout_mod
-import sellbird.integrations.email_finder as ef
-from sellbird.agents.scout import Scout
-from sellbird.collectors.profile import ProfileCollector
+import andorinha.agents.scout as scout_mod
+import andorinha.integrations.email_finder as ef
+from andorinha.agents.scout import Scout
+from andorinha.collectors.profile import ProfileCollector
 from tests.test_people_finder import LANTERN, WHITLOCK
 
 OWNER_ICP = ["Owner", "Founder", "President", "CEO"]

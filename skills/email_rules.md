@@ -16,7 +16,7 @@ O assunto também em português: minúsculas, 2 a 5 palavras.
   simples, e depois A TUA OFERTA (acima) como a única pergunta. Não nomeies o
   produto.
 - Escreve o texto real (sem variáveis de merge: já sabes o nome e a empresa).
-- Sem despedida e sem nome no fim: o Sellbird acrescenta o primeiro nome de
+- Sem despedida e sem nome no fim: o Andorinha acrescenta o primeiro nome de
   quem envia.
 
 ## Sequência de 3 emails

@@ -6,6 +6,3 @@ contact_links:
   - name: Report a security problem
     url: https://github.com/ethanplusai/sellbird/security/advisories/new
     about: Report vulnerabilities privately, not as an issue.
-  - name: Hosted Sellbird
-    url: https://sellbird.ai
-    about: Questions about the hosted version at sellbird.ai.

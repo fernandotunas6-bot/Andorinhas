@@ -1,4 +1,4 @@
-"""Allow running Sellbird with `python -m sellbird`."""
+"""``python -m sellbird`` still works: see sellbird/cli.py."""
 
 from sellbird.cli import main
 

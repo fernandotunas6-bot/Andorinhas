@@ -1,6 +1,6 @@
 # DIY Prospecting Tactics
 
-Sellbird's playbook for finding leads without expensive tools like Apollo, ZoomInfo, or Clearbit.
+Andorinha's playbook for finding leads without expensive tools like Apollo, ZoomInfo, or Clearbit.
 
 ---
 

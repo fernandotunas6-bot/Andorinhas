@@ -1,7 +1,7 @@
 # site — Worker da Cloudflare
 
 Página pública servida por um Worker da Cloudflare. Existe para que os emails
-que o Sellbird envia tenham um domínio próprio para onde apontar, em vez de
+que o Andorinha envia tenham um domínio próprio para onde apontar, em vez de
 ligarem para um site que não existe.
 
 Construído com o CLI `cf` (beta). A configuração está em
@@ -69,8 +69,8 @@ lista HSTS pré-carregada dos browsers. Depois de o comprar e de o adicionar
 como zona nesta conta da Cloudflare, descomenta a linha `domains` em
 [`cloudflare.config.ts`](cloudflare.config.ts) e faz push outra vez.
 
-## Ligar ao Sellbird
+## Ligar ao Andorinha
 
 Com o domínio no ar, põe-no em `channels.email.link_domains` no
-`sellbird.yaml`. O Sellbird retém qualquer email que ligue para um domínio que
+`andorinha.yaml`. O Andorinha retém qualquer email que ligue para um domínio que
 não seja o teu, e essa lista é a que ele aceita.

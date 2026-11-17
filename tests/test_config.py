@@ -5,17 +5,17 @@ import os
 
 import yaml
 
-from sellbird.config import SellbirdConfig, EnvConfig, load_env
+from andorinha.config import AndorinhaConfig, EnvConfig, load_env
 
 
 def test_config_from_dict():
-    """SellbirdConfig can be constructed from a dict (YAML-like)."""
+    """AndorinhaConfig can be constructed from a dict (YAML-like)."""
     data = {
         "persona": {
-            "name": "Sellbird",
+            "name": "Andorinha",
             "company": "Acme",
             "role": "BDR",
-            "email": "sellbird@acme.com",
+            "email": "andorinha@acme.com",
             "linkedin": "",
             "tone": "professional",
         },
@@ -33,8 +33,8 @@ def test_config_from_dict():
             "geography": ["US"],
         },
     }
-    config = SellbirdConfig(**data)
-    assert config.persona.name == "Sellbird"
+    config = AndorinhaConfig(**data)
+    assert config.persona.name == "Andorinha"
     assert config.product.name == "Widget"
     assert config.icp.industries == ["SaaS"]
     assert config.channels.email.max_daily_sends == 50  # default
@@ -56,7 +56,7 @@ def test_offer_config_defaults():
         "product": {"name": "P", "description": "D", "pricing": "$1", "key_benefits": [], "objection_responses": {}},
         "icp": {"industries": [], "company_size": "", "titles": [], "geography": []},
     }
-    config = SellbirdConfig(**data)
+    config = AndorinhaConfig(**data)
     assert config.product.offer.goal == "book_call"
     assert config.product.offer.booking_method == "calendar_link"
     assert config.product.offer.meeting_duration == "15 minutes"
