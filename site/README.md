@@ -59,7 +59,9 @@ Depois do primeiro deploy o Worker responde no subdomínio gratuito
 https://andorinhas.<o-teu-subdominio>.workers.dev
 ```
 
-Esse subdomínio vem incluído e não custa nada.
+Esse subdomínio vem incluído e não custa nada. Está no ar em:
+
+<https://andorinhas.valentinocanguele.workers.dev>
 
 Um domínio `.dev` de verdade, como `andorinhas.dev`, é outra coisa: tem de ser
 **comprado** num registrador, e o `.dev` obriga a HTTPS, porque o TLD está na
