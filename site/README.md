@@ -35,6 +35,19 @@ usar um devcontainer com Linux (glibc 2.35+).
 Sem os dois segredos o workflow continua a correr os testes, a build e a
 verificação, e salta apenas o envio.
 
+Em alternativa ao painel do GitHub, define-os a partir do teu terminal, sem o
+valor aparecer no histórico da shell:
+
+```
+gh secret set CLOUDFLARE_API_TOKEN --repo fernandotunas6-bot/Andorinhas
+gh secret set CLOUDFLARE_ACCOUNT_ID --repo fernandotunas6-bot/Andorinhas
+```
+
+Cada comando pede o valor e lê-o da entrada padrão. Depois corre o workflow em
+**Actions → Cloudflare → Run workflow**. Ao fim do deploy o workflow visita
+`/health` no endereço publicado e escreve o link no resumo da execução, para se
+ver logo se ficou mesmo no ar.
+
 ## O domínio
 
 Depois do primeiro deploy o Worker responde no subdomínio gratuito

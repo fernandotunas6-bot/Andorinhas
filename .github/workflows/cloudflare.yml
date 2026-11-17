@@ -45,11 +45,28 @@ jobs:
         run: npx cf deploy --prebuilt --mode production --dry-run
 
       - name: Deploy
+        id: deploy
         if: github.event_name != 'pull_request' && env.HAS_CF_TOKEN == 'true'
-        run: npx cf deploy --prebuilt --mode production
+        run: |
+          set -o pipefail
+          npx cf deploy --prebuilt --mode production 2>&1 | tee deploy.log
+          url="$(grep -oE 'https://[a-z0-9.-]+\.workers\.dev' deploy.log | head -1)"
+          echo "url=$url" >> "$GITHUB_OUTPUT"
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Check the deployed site answers
+        if: steps.deploy.outputs.url != ''
+        env:
+          URL: ${{ steps.deploy.outputs.url }}
+        run: |
+          code="$(curl -sS -o body.json -w '%{http_code}' \
+            --retry 6 --retry-all-errors --retry-delay 5 "$URL/health")"
+          echo "GET $URL/health -> HTTP $code"
+          cat body.json; echo
+          test "$code" = "200"
+          echo "### Live at [$URL]($URL)" >> "$GITHUB_STEP_SUMMARY"
 
       - name: No Cloudflare credentials, upload skipped
         if: github.event_name != 'pull_request' && env.HAS_CF_TOKEN != 'true'
