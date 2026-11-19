@@ -39,12 +39,14 @@ def env(tmp_path, monkeypatch):
     asyncio.run(_init())
     with sqlite3.connect(db) as c:
         c.executemany(
-            "INSERT INTO companies (id, name, domain, website, industry, location, source, source_url) "
-            "VALUES (?, ?, ?, ?, ?, ?, 'discover:test', ?)",
+            "INSERT INTO companies (id, name, domain, website, industry, location, phone, "
+            "source, source_url) VALUES (?, ?, ?, ?, ?, ?, ?, 'discover:test', ?)",
             [("c1", "Acme Forge", "acme.example", "https://acme.example", "forging company",
-              "Springfield", "https://search.example/r1"),
-             ("c2", "Quiet Mill", "quiet.example", "", "magazine", "Springfield", ""),
-             ("c3", "Blocked Co", "blocked.example", "", "forging company", "Springfield", "")])
+              "Springfield", "", "https://search.example/r1"),
+             ("c2", "Quiet Mill", "quiet.example", "", "magazine", "Springfield",
+              "+1 555 010 0000", ""),
+             ("c3", "Blocked Co", "blocked.example", "", "forging company", "Springfield",
+              "", "")])
         c.execute("INSERT INTO prospects (id, company_id, first_name, last_name, title, email, "
                   "email_status, status) VALUES ('p1', 'c1', 'Nora', 'Vale', 'Managing Director', "
                   "'nora@acme.example', 'verified', 'new')")
@@ -85,9 +87,18 @@ def test_register_csv_lists_every_company(client):
     assert resp.status_code == 200
     assert "company-register.csv" in resp.headers["content-disposition"]
     lines = resp.text.lstrip("﻿").splitlines()
-    assert lines[0].startswith("company,website,sector,area,fit,why_selected,status")
+    assert lines[0].startswith("company,website,phone,sector,area,fit,why_selected,status")
     assert len(lines) == 4
     assert "Quiet Mill" in resp.text and "Not processed yet" in resp.text
+
+
+def test_register_csv_carries_the_phone_of_a_company_with_no_email(client):
+    """A listings provider often returns a phone and nothing else. Dropping it
+    would leave the register with no way to reach that business at all."""
+    resp = client.get("/api/export/companies.csv")
+    row = next(r for r in resp.text.splitlines() if r.startswith("Quiet Mill"))
+    # _cell prefixes a leading "+" so a spreadsheet can't read it as a formula.
+    assert "'+1 555 010 0000" in row
 
 
 def test_best_fit_first_across_more_than_the_page_cap(client, monkeypatch):
