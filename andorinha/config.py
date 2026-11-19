@@ -524,6 +524,32 @@ _SAYS_IT_STOPS_FR_RE = re.compile(
     re.IGNORECASE)
 # "Click" in French: "cliquez ici pour vous désabonner".
 _FRENCH_CLICK_RE = re.compile(r"\bcliqu(?:ez|er|e)\b", re.IGNORECASE)
+# Portuguese, matched with accents removed (see _fold_accents): "Não tem
+# interesse? Responda a dizer e não volto a escrever.", "Diga e deixo de
+# enviar", "Responda para sair da lista".
+_SAYS_IT_STOPS_PT_RE = re.compile(
+    r"(?:\bnao,?\s+obrigad\w+\b"
+    r"|\bsem\s+interesse\b"
+    r"|\bnao\s+(?:tem|tenho|temos|ha|e|houve)\s+interesse\b"
+    r"|\bnao\s+(?:me\s+|nos\s+|lhe\s+)?interessa\b"
+    r"|\bnao\s+(?:estou|estamos|esta|estao)\s+interessad\w+"
+    r"|\bnao\s+interessad\w+"
+    r"|\bnao\s+(?:lhe\s+|te\s+|vos\s+)?(?:volto|voltarei|torno|tornarei)\s+a\s+"
+    r"(?:escrever|contactar|contatar|enviar|incomodar|insistir|falar)"
+    r"|\bnao\s+(?:lhe\s+|te\s+|vos\s+)?(?:escrevo|escreverei|contacto|contactarei"
+    r"|contato|contatarei|envio|enviarei|insisto)\s+mais\b"
+    r"|\b(?:deixo|deixarei|paro|pararei)\s+de\s+(?:lhe\s+|te\s+|vos\s+)?"
+    r"(?:escrever|enviar|contactar|contatar|insistir|incomodar)"
+    r"|\b(?:cancel\w*|anul\w*)\s+(?:a\s+|as\s+)?(?:subscri\w+|inscri\w+)"
+    r"|\bdescadastr\w+|\bdes(?:s)?ubscrev\w+|\bdesinscr\w+"
+    r"|\b(?:retir|remov|tir|risqu|apagu|elimin)\w*(?:-(?:me|nos|lhe|vos|te|os?|as?))?\s+"
+    r"(?:me\s+|nos\s+)?(?:da|de|das)\s+(?:(?:minha|nossa|sua|esta)\s+)?listas?\b"
+    r"|\bsair\s+da\s+lista\b"
+    r"|\bnao\s+(?:quer|queres|querem|quiser|quiserem|deseja|desejam|desejar|desejarem"
+    r"|pretende|pretendem|pretender|pretenderem)\s+(?:mais\s+)?receber\b)",
+    re.IGNORECASE)
+# "Click" in Portuguese: "clique aqui para cancelar a subscrição".
+_PORTUGUESE_CLICK_RE = re.compile(r"\bcliq(?:ue|uem|ar|a)\b", re.IGNORECASE)
 
 
 def _fold_accents(text: str) -> str:
@@ -597,14 +623,16 @@ class ComplianceConfig(BaseModel):
             return v
         folded = _fold_accents(v)
         if (any(bit in lowered for bit in ("http", "www.", "click", "@"))
-                or _HEBREW_CLICK_RE.search(v) or _FRENCH_CLICK_RE.search(folded)):
+                or _HEBREW_CLICK_RE.search(v) or _FRENCH_CLICK_RE.search(folded)
+                or _PORTUGUESE_CLICK_RE.search(folded)):
             raise ValueError(
                 "opt_out_line can't contain a link or an email address: cold email "
                 "allows one link, and opting out must be as simple as replying."
             )
         if not (_SAYS_IT_STOPS_RE.search(v) or _SAYS_IT_STOPS_HE_RE.search(v)
                 or _SAYS_IT_STOPS_ES_RE.search(v) or _SAYS_IT_STOPS_IT_RE.search(v)
-                or _SAYS_IT_STOPS_FR_RE.search(folded)):
+                or _SAYS_IT_STOPS_FR_RE.search(folded)
+                or _SAYS_IT_STOPS_PT_RE.search(folded)):
             raise ValueError(
                 "opt_out_line doesn't tell people they can stop these emails. Say so in "
                 "any words (\"Not interested? Just let me know and I won't email you "
